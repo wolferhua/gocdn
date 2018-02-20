@@ -41,9 +41,9 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	filename := ver_path
 
+	//分析版本
 	reg = regexp.MustCompile(`(?U)^/v\.([^/]+)(/.*?)`)
 	all = reg.FindAllStringSubmatch(ver_path, -1)
-	fmt.Println(all)
 	ver := "default"
 	min := false
 	if len(all) > 0 {
@@ -51,6 +51,17 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		reg = regexp.MustCompile(`\.min`)
 		min = reg.MatchString(ver)
 		filename = all[0][2]
+	} else {
+
+	}
+
+	//获取文件ext
+	reg = regexp.MustCompile(`(?U)\.([^.]+)$`)
+	all = reg.FindAllStringSubmatch(filename, -1)
+	fmt.Println(all)
+	ext := ""
+	if len(all) > 0 {
+		ext = all[0][1]
 	} else {
 
 	}
@@ -65,6 +76,7 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		filename,
 		ver,
 		min,
+		ext,
 	}
 
 	if bucket.IsLocal {
@@ -85,6 +97,15 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(all[1])
 
 	//fmt.Fprintln(w, r.URL.Path)
+}
+
+func (slf Handler) local(bf BucketFile, w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, bf.Name)
+	fmt.Fprintln(w, bf)
+}
+func (slf Handler) remote(bf BucketFile, w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, bf.Name)
+	fmt.Fprintln(w, bf)
 }
 
 func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
@@ -160,13 +181,4 @@ func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
 	}
 	w.WriteHeader(code)
 	fmt.Fprintln(w, "<h1>"+code_status+" </h1>")
-}
-
-func (slf Handler) local(bf BucketFile, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, bf.Name)
-	fmt.Fprintln(w, bf)
-}
-func (slf Handler) remote(bf BucketFile, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, bf.Name)
-	fmt.Fprintln(w, bf)
 }
