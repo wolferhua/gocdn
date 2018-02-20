@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-go run main.go
+go run src/main/main.go

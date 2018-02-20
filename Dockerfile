@@ -1,9 +1,9 @@
 FROM golang:1.9.4-stretch
 
-ADD . /gocdn
+ADD . /go
 
 
-WORKDIR /gocdn
+WORKDIR /go
 
 
 RUN chmod +x start.sh
