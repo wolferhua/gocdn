@@ -3,12 +3,12 @@
     "hashmap":{
       "name":"hashmap",
       "isLocal": false,
-      "root":"http://www.hashmap.cn/"
+      "root":"http://www.hashmap.cn"
     },
     "hashmop":{
       "name":"hashmop",
-      "isLocal": false,
-      "root":"http://www.hashmop.com/"
+      "isLocal": true,
+      "root":"/vhosts"
     }
   }
 }

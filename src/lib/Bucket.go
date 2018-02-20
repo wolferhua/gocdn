@@ -11,12 +11,12 @@ type BucketFile struct {
 	Filename string
 	Ver      string
 	IsMin    bool
-	Ext string
-	Mime string
+	Ext      string
+	Mime     string
 }
 
-func getMime(ext string,config Config) string {
-	mime,ok := config.Mimes[ext]
+func getMime(ext string, config Config) string {
+	mime, ok := config.Mimes[ext]
 	if !ok {
 		mime = "application/octet-stream"
 	}

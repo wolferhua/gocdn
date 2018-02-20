@@ -2,8 +2,11 @@ package lib
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"regexp"
+	"strconv"
+	"os"
 )
 
 type Handler struct {
@@ -11,7 +14,7 @@ type Handler struct {
 }
 
 func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
+	w.Header().Set("Cdn-Source","gocdn")
 	path := r.URL.Path
 	//分析path
 	///bucket/version/filename
@@ -76,7 +79,7 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ver,
 		min,
 		ext,
-		getMime(ext,slf.Conf),
+		getMime(ext, slf.Conf),
 	}
 
 	if bucket.IsLocal {
@@ -89,12 +92,70 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (slf Handler) local(bf BucketFile, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, bf.Name)
-	fmt.Fprintln(w, bf)
+	filename := bf.Root + bf.Filename
+	//fmt.Fprintln(w,filename)
+	//判断文件是否存在
+	stat,err := os.Stat(filename)
+	if err != nil {
+		slf.halt(w, r, 400)
+		return
+	}
+
+	//判断目录
+	if stat.IsDir() {
+		slf.halt(w, r, 403)
+		return
+	}
+
+	lenthg := stat.Size()
+	w.WriteHeader(200)
+	w.Header().Set("Content-type", bf.Mime)
+	w.Header().Set("Content-length", strconv.FormatInt(lenthg, 10))
+
+	//逐行读取文件
+	file ,err := os.Open(filename)
+	if err != nil {
+		slf.halt(w, r, 403)
+		return
+	}
+	defer file.Close()
+	b := make([]byte, 1024)
+	for {
+		_,err := file.Read(b)
+		if err != nil {
+			break
+		}
+		w.Write(b)
+	}
+
+
+	//fmt.Fprintln(w,stat)
+	//fmt.Fprintln(w,err)
 }
 func (slf Handler) remote(bf BucketFile, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, bf.Name)
-	fmt.Fprintln(w, bf)
+	//拼装url
+	url := bf.Root + bf.Filename
+	resp, err := http.Get(url)
+	if err != nil {
+		slf.halt(w, r, 400)
+		return
+	}
+
+	if resp.StatusCode != 200 {
+		slf.halt(w, r, resp.StatusCode)
+		return
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+
+	resp.Body.Close()
+	if err != nil {
+		slf.halt(w, r, 403)
+		return
+	}
+	w.WriteHeader(200)
+	w.Header().Set("Content-type", bf.Mime)
+	w.Header().Set("Content-length", strconv.FormatInt(resp.ContentLength, 10))
+	w.Write(body)
 }
 
 func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
