@@ -1,23 +1,21 @@
 package lib
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
-	"encoding/json"
 )
 
-
 type Config struct {
-	Buckets map[string] Bucket
+	Buckets map[string]Bucket
 }
-
 
 func InitConfig() (conf Config) {
 	file, err := os.Open("conf/conf.json")
 	defer file.Close()
-	if err !=nil {
-		fmt.Println("load config error:"+err.Error())
-		os.Exit(1);
+	if err != nil {
+		fmt.Println("load config error:" + err.Error())
+		os.Exit(1)
 	}
 	decoder := json.NewDecoder(file)
 	//conf = Config{}

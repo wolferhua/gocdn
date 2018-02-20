@@ -1,7 +1,14 @@
 package lib
 
 type Bucket struct {
-	Name string
+	Name    string
 	IsLocal bool
-	Root string
+	Root    string
+}
+
+type BucketFile struct {
+	Bucket
+	Filename string
+	Ver      string
+	IsMin    bool
 }

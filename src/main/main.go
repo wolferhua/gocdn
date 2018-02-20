@@ -1,17 +1,19 @@
 package main
 
 import (
-	"net/http"
 	"lib"
+	"net/http"
 )
 
-var conf lib.Config
+var config lib.Config
 
 func init() {
-	conf = lib.InitConfig()
+	config = lib.InitConfig()
 }
 
 func main() {
-	var h lib.Handler
+	h := lib.Handler{
+		Conf: config,
+	}
 	http.ListenAndServe(":80", h)
 }

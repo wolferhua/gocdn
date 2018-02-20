@@ -1,9 +1,8 @@
 package lib
 
 type Buckets struct {
-
 }
 
-func (slf Buckets) get(name string)  {
+func (slf Buckets) get(name string) {
 
 }
