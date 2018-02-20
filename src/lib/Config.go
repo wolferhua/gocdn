@@ -6,14 +6,9 @@ import (
 	"encoding/json"
 )
 
-type OBucket struct {
-	Name string
-	IsLocal bool
-	Root string
-} 
 
 type Config struct {
-	Buckets map[string] OBucket
+	Buckets map[string] Bucket
 }
 
 
