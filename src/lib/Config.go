@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"io/ioutil"
+	"strings"
 )
 
 type Config struct {
@@ -26,13 +27,29 @@ func InitConfig() (conf Config) {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println(conf.Buckets)
-	fmt.Println("config load")
 	//mime
-	mimes, err  := os.Open("conf/mime.types")
-	defer mimes.Close()
+	mimes, err  := ioutil.ReadFile("conf/mime.types")
 
+	if err != nil {
+		fmt.Println("load config error:" + err.Error())
+		os.Exit(1)
+	}
+	mimecontent :=string(mimes)
+	mimecontent = strings.TrimSpace(mimecontent)
+	mimelist := strings.Split(mimecontent,";")
 
+	conf.Mimes = make(map[string]string)
+	for _, item := range mimelist {
+		items := strings.Fields(item)
+		if len(items) >1 {
+			exts := items[1:]
+			for _, ext := range exts {
+				conf.Mimes[ext] = items[0]
+			}
+		}
+	}
 
+	fmt.Println("config load")
+	//fmt.Println(conf)
 	return conf
 }
