@@ -8,6 +8,10 @@ WORKDIR /go
 
 RUN chmod +x start.sh
 
-RUN  go build -v -o gocnd
+RUN  go build -v -o gocdn src/main/main.go
 
-CMD ["./start.sh"]
+CMD ["/go/start.sh"]
+
+#docker build -t wolferhua/gocdn  .
+
+

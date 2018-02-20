@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./gocnd
+/go/gocdn
