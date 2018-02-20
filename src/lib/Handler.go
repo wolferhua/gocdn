@@ -17,9 +17,8 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// /hashmap/v.1/test/1.png  //正常文件
 	// /hashmap/v.1.min/test/1.png  //压缩
 
-	reg := regexp.MustCompile(`(?U)^/([^/]+)(/.*)`)
+	reg := regexp.MustCompile(`(?U)^/([^/]+)(/.*?)`)
 	all := reg.FindAllStringSubmatch(path,-1)
-	fmt.Println(all)
 	if len(all)<1 {
 		slf.h404(w,r)
 		return
@@ -28,18 +27,19 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//仓库
 	bucket := all[0][1]
 	//包含版本路径
-	verpath := all[1][0]
+	verpath := all[0][2]
 
-	reg = regexp.MustCompile(`(?U)^/(v.[^/]+)(/.*)`)
+	reg = regexp.MustCompile(`(?U)^/v\.([^/]+)(/.*?)`)
 	all = reg.FindAllStringSubmatch(verpath,-1)
 	fmt.Println(all)
 	ver := "default"
 	min := false
-	if len(all) > 1 {
+	if len(all) > 0 {
 		ver = all[0][1]
-		reg = regexp.MustCompile("\\.min")
+		reg = regexp.MustCompile(`\.min`)
 		min = reg.MatchString(ver)
 	}else{
+
 	}
 
 
