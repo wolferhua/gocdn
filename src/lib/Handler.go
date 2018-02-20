@@ -73,6 +73,7 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		slf.remote(bf, w, r)
 	}
 
+	return
 	//fmt.Println(bucketname)
 	//fmt.Println(bucket)
 	//fmt.Println(ver)
@@ -162,8 +163,10 @@ func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
 }
 
 func (slf Handler) local(bf BucketFile, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, bf.Bucket)
+	fmt.Fprintln(w, bf.Name)
+	fmt.Fprintln(w, bf)
 }
 func (slf Handler) remote(bf BucketFile, w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, bf.Name)
 	fmt.Fprintln(w, bf)
 }

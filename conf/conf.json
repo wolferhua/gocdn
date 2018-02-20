@@ -2,12 +2,12 @@
   "buckets": {
     "hashmap":{
       "name":"hashmap",
-      "isLocal": true,
+      "isLocal": false,
       "root":"http://www.hashmap.cn/"
     },
     "hashmop":{
       "name":"hashmop",
-      "isLocal": true,
+      "isLocal": false,
       "root":"http://www.hashmop.com/"
     }
   }
