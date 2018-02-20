@@ -58,7 +58,6 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//获取文件ext
 	reg = regexp.MustCompile(`(?U)\.([^.]+)$`)
 	all = reg.FindAllStringSubmatch(filename, -1)
-	fmt.Println(all)
 	ext := ""
 	if len(all) > 0 {
 		ext = all[0][1]
@@ -77,6 +76,7 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ver,
 		min,
 		ext,
+		getMime(ext,slf.Conf),
 	}
 
 	if bucket.IsLocal {
@@ -86,17 +86,6 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
-	//fmt.Println(bucketname)
-	//fmt.Println(bucket)
-	//fmt.Println(ver)
-	//fmt.Println(min)
-	//fmt.Println(filename)
-
-	//fmt.Println(all)
-	//fmt.Println(all[0][1])
-	//fmt.Println(all[1])
-
-	//fmt.Fprintln(w, r.URL.Path)
 }
 
 func (slf Handler) local(bf BucketFile, w http.ResponseWriter, r *http.Request) {
