@@ -1,14 +1,17 @@
 {
+  "deny":"php,asp,jsp",
   "buckets": {
     "hashmap":{
       "name":"hashmap",
       "isLocal": false,
-      "root":"http://www.hashmap.cn"
+      "root":"http://www.hashmap.cn",
+      "deny":"php,gif"
     },
     "hashmop":{
       "name":"hashmop",
       "isLocal": true,
-      "root":"/vhosts"
+      "root":"/vhosts",
+      "deny":""
     }
   }
 }

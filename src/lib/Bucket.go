@@ -4,6 +4,7 @@ type Bucket struct {
 	Name    string
 	IsLocal bool
 	Root    string
+	Deny string
 }
 
 type BucketFile struct {

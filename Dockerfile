@@ -8,7 +8,8 @@ WORKDIR /go
 
 RUN chmod +x start.sh
 
-RUN  go build -v -o gocdn src/main/main.go
+RUN  go build -v -o gocdn src/main/main.go \
+    && rm -rf src
 
 CMD ["/go/start.sh"]
 

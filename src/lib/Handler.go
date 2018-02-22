@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"os"
+	"strings"
 )
 
 type Handler struct {
@@ -74,12 +75,17 @@ func (slf Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			bucket.Name,
 			bucket.IsLocal,
 			bucket.Root,
+			bucket.Deny,
 		},
 		filename,
 		ver,
 		min,
 		ext,
 		getMime(ext, slf.Conf),
+	}
+	if slf.checkDeny(bf) {
+		slf.halt(w, r, 403)
+		return
 	}
 
 	if bucket.IsLocal {
@@ -158,6 +164,13 @@ func (slf Handler) remote(bf BucketFile, w http.ResponseWriter, r *http.Request)
 	w.Write(body)
 }
 
+func (slf Handler) checkDeny(bf BucketFile) bool  {
+	dep := ","
+	denys := dep+slf.Conf.Deny +dep+ bf.Deny+dep
+	return strings.Contains(denys,dep+bf.Ext+dep)
+}
+
+
 func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
 
 	//codes := make(map[string]string)
@@ -225,7 +238,7 @@ func (slf Handler) halt(w http.ResponseWriter, r *http.Request, code int) {
 		"600": "600 Unparseable Response Headers",
 	}
 
-	code_status, ok := codes[string(code)]
+	code_status, ok := codes[strconv.Itoa(code)]
 	if !ok {
 		code_status = codes["404"]
 	}

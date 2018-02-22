@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	Buckets map[string]Bucket
+	Deny  string
 	Mimes   map[string]string
 }
 
