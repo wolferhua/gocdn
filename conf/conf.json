@@ -1,5 +1,7 @@
 {
   "deny":"php,asp,jsp",
+  "port": 8181,
+  "host": "",
   "buckets": {
     "hashmap":{
       "name":"hashmap",

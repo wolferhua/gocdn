@@ -11,6 +11,8 @@ import (
 type Config struct {
 	Buckets map[string]Bucket
 	Deny  string
+	Host  string
+	Port  int
 	Mimes   map[string]string
 }
 
